@@ -1,0 +1,46 @@
+name: Go CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "backend/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "backend/**"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21" # Or your desired Go version
+
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Get dependencies
+        run: go mod tidy
+
+      - name: Run tests
+        run: go test -v ./...
+
+      - name: Format code
+        run: |
+          if ! go fmt ./...; then
+            echo "::error::Go code format issues found."
+            exit 1
+          fi
+
+      - name: Lint code
+        uses: dominikh/staticcheck-action@v1.3.0
+
+      - name: Security audit
+        uses: securego/gosec@v2.19.0
+
+      - name: Build
+        run: go build -v ./...
