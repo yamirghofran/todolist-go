@@ -23,6 +23,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Change working directory
+        run: cd backend
+
       - name: Get dependencies
         run: go mod tidy
 
