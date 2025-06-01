@@ -15,34 +15,57 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Check out your repository's code
+      # This was missing and is essential for the workflow to access your files.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Go environment
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.24" # Or your desired Go version
 
+      # Step 3: Get dependencies
+      # 'working-directory' is correctly used here for a 'run' step.
       - name: Get dependencies
         run: go mod tidy
         working-directory: backend
 
+      # Step 4: Run tests
       - name: Run tests
         run: go test -v ./...
         working-directory: backend
 
+      # Step 5: Format code
       - name: Format code
         run: |
-          if ! go fmt ./...; then
-            echo "::error::Go code format issues found."
+          # Check formatting and fail if not formatted
+          if ! gofmt -l . | grep -q '.'; then
+            echo "All Go files are formatted."
+          else
+            echo "::error::Go code format issues found in the following files:"
+            gofmt -l .
             exit 1
           fi
         working-directory: backend
 
+      # Step 6: Lint code
+      # For 'uses' steps, 'working_directory' (if supported by the action) goes under 'with'.
       - name: Lint code
         uses: dominikh/staticcheck-action@v1.3.0
-        working-directory: backend
+        with:
+          working_directory: backend # Corrected: 'working_directory' is an input for this action
 
+      # Step 7: Security audit with Gosec
+      # Similarly, 'working_directory' is an input for the gosec action.
       - name: Security audit
         uses: securego/gosec@v2.19.0
+        with:
+          working_directory: backend # Specifies the directory for gosec to scan
+          # args: './...' # Optional: gosec action defaults to './...' which is usually what you want within the working_directory
 
+      # Step 8: Build the application
       - name: Build
         run: go build -v ./...
         working-directory: backend
