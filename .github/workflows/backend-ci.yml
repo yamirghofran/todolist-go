@@ -42,7 +42,6 @@ jobs:
 
       - name: Security audit
         uses: securego/gosec@v2.19.0
-        working-directory: backend
 
       - name: Build
         run: go build -v ./...
