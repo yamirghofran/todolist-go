@@ -56,6 +56,7 @@ jobs:
         uses: dominikh/staticcheck-action@v1.3.0
         with:
           working-directory: backend # Corrected: 'working_directory' is an input for this action
+          install-go: false
 
       # Step 7: Security audit with Gosec
       # Similarly, 'working_directory' is an input for the gosec action.
