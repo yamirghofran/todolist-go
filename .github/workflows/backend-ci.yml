@@ -63,8 +63,7 @@ jobs:
       - name: Security audit
         uses: securego/gosec@v2.19.0
         with:
-          entryPoint: backend # Specifies the directory for gosec to scan
-          # args: './...' # Optional: gosec action defaults to './...' which is usually what you want within the working_directory
+          args: "./backend/..." # Optional: gosec action defaults to './...' which is usually what you want within the working_directory
 
       # Step 8: Build the application
       - name: Build
