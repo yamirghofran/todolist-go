@@ -55,7 +55,7 @@ jobs:
       - name: Lint code
         uses: dominikh/staticcheck-action@v1.3.0
         with:
-          working_directory: backend # Corrected: 'working_directory' is an input for this action
+          working-directory: backend # Corrected: 'working_directory' is an input for this action
 
       # Step 7: Security audit with Gosec
       # Similarly, 'working_directory' is an input for the gosec action.
