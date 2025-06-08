@@ -16,3 +16,13 @@ type Todo struct {
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
 }
+
+type User struct {
+	ID           int32            `json:"id"`
+	OauthID      *string          `json:"oauth_id"`
+	Name         *string          `json:"name"`
+	Email        string           `json:"email"`
+	PasswordHash *string          `json:"password_hash"`
+	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+}
