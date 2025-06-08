@@ -11,10 +11,10 @@ type TodoService struct {
 	queries *Queries
 }
 
-func NewTodoService(queries *Queries) (*TodoService, error) {
+func NewTodoService(queries *Queries) *TodoService {
 	return &TodoService{
 		queries: queries,
-	}, nil
+	}
 }
 
 func (s *TodoService) CreateTodo(ctx context.Context, req models.CreateTodoRequest) (*models.Todo, error) {
