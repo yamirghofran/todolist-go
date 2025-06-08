@@ -4,31 +4,17 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/yamirghofran/todolist-go/internal/models"
 )
 
 type TodoService struct {
-	db      *pgxpool.Pool
 	queries *Queries
 }
 
-func NewTodoService(databaseURL string) (*TodoService, error) {
-	db, err := pgxpool.New(context.Background(), databaseURL)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to database: %w", err)
-	}
-
-	queries := New(db)
-
+func NewTodoService(queries *Queries) (*TodoService, error) {
 	return &TodoService{
-		db:      db,
 		queries: queries,
 	}, nil
-}
-
-func (s *TodoService) Close() {
-	s.db.Close()
 }
 
 func (s *TodoService) CreateTodo(ctx context.Context, req models.CreateTodoRequest) (*models.Todo, error) {
