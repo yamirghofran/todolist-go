@@ -24,7 +24,7 @@ func main() {
 	queries := db.New(dbPool)
 
 	// initialize database service
-	todoService, err := db.NewTodoService(queries)
+	todoService := db.NewTodoService(queries)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}

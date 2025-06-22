@@ -1,18 +1,18 @@
 -- name: GetUsers :many
-SELECT * FROM users;
+SELECT * FROM users ORDER BY created_at DESC;
 
 -- name: GetUserByID :one
 SELECT * FROM users
 WHERE id = $1;
 
 -- name: CreateUser :one
-INSERT INTO users (name, email, password_hash)
+INSERT INTO users (name, email, hashed_password)
 VALUES ($1, $2, $3)
 RETURNING *;
 
 -- name: UpdateUser :one
 UPDATE users
-SET name = $2, email = $3, password_hash = $4
+SET name = $2, email = $3, hashed_password = $4
 WHERE id = $1
 RETURNING *;
 

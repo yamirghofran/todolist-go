@@ -8,6 +8,15 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Project struct {
+	ID          int32            `json:"id"`
+	UserID      *int32           `json:"user_id"`
+	Title       string           `json:"title"`
+	IsCompleted *bool            `json:"is_completed"`
+	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
+}
+
 type Todo struct {
 	ID          int32            `json:"id"`
 	Title       string           `json:"title"`
@@ -15,14 +24,17 @@ type Todo struct {
 	IsCompleted *bool            `json:"is_completed"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 	UpdatedAt   pgtype.Timestamp `json:"updated_at"`
+	UserID      *int32           `json:"user_id"`
+	ProjectID   *int32           `json:"project_id"`
 }
 
 type User struct {
-	ID           int32            `json:"id"`
-	OauthID      *string          `json:"oauth_id"`
-	Name         *string          `json:"name"`
-	Email        string           `json:"email"`
-	PasswordHash *string          `json:"password_hash"`
-	CreatedAt    pgtype.Timestamp `json:"created_at"`
-	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+	ID             int32            `json:"id"`
+	OauthProvider  *string          `json:"oauth_provider"`
+	OauthID        *string          `json:"oauth_id"`
+	Name           *string          `json:"name"`
+	Email          string           `json:"email"`
+	HashedPassword *string          `json:"hashed_password"`
+	CreatedAt      pgtype.Timestamp `json:"created_at"`
+	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
 }

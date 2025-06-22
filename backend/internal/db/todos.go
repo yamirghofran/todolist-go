@@ -115,8 +115,8 @@ func (s *TodoService) UpdateTodo(ctx context.Context, id int32, req models.Updat
 	}, nil
 }
 
-func (s *TodoService) DeleteTodo(ctx context.Context, id int32) error {
-	err := s.queries.DeleteTodo(ctx, id)
+func (s *TodoService) DeleteTodo(ctx context.Context, user_id, id int32) error {
+	err := s.queries.DeleteTodo(ctx, user_id, id)
 	if err != nil {
 		return fmt.Errorf("error deleting todo: %w", err)
 	}

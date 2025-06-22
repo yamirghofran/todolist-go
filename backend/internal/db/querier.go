@@ -9,14 +9,23 @@ import (
 )
 
 type Querier interface {
+	CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error)
 	CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	DeleteTodo(ctx context.Context, id int32) error
+	DeleteProject(ctx context.Context, arg DeleteProjectParams) error
+	DeleteTodo(ctx context.Context, arg DeleteTodoParams) error
 	DeleteUser(ctx context.Context, id int32) error
+	GetProjectAndTodosByUserID(ctx context.Context, arg GetProjectAndTodosByUserIDParams) ([]GetProjectAndTodosByUserIDRow, error)
+	GetProjectByID(ctx context.Context, id int32) (Project, error)
+	GetProjects(ctx context.Context) ([]Project, error)
+	GetProjectsAndTodosByUserID(ctx context.Context, userID *int32) ([]GetProjectsAndTodosByUserIDRow, error)
+	GetProjectsByUserID(ctx context.Context, userID *int32) ([]Project, error)
 	GetTodoByID(ctx context.Context, id int32) (Todo, error)
 	GetTodos(ctx context.Context) ([]Todo, error)
+	GetTodosByUserID(ctx context.Context, arg GetTodosByUserIDParams) ([]Todo, error)
 	GetUserByID(ctx context.Context, id int32) (User, error)
 	GetUsers(ctx context.Context) ([]User, error)
+	UpdateProject(ctx context.Context, arg UpdateProjectParams) (Project, error)
 	UpdateTodo(ctx context.Context, arg UpdateTodoParams) (Todo, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }

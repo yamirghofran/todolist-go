@@ -10,26 +10,27 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (name, email, password_hash)
+INSERT INTO users (name, email, hashed_password)
 VALUES ($1, $2, $3)
-RETURNING id, oauth_id, name, email, password_hash, created_at, updated_at
+RETURNING id, oauth_provider, oauth_id, name, email, hashed_password, created_at, updated_at
 `
 
 type CreateUserParams struct {
-	Name         *string `json:"name"`
-	Email        string  `json:"email"`
-	PasswordHash *string `json:"password_hash"`
+	Name           *string `json:"name"`
+	Email          string  `json:"email"`
+	HashedPassword *string `json:"hashed_password"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.Name, arg.Email, arg.PasswordHash)
+	row := q.db.QueryRow(ctx, createUser, arg.Name, arg.Email, arg.HashedPassword)
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.OauthProvider,
 		&i.OauthID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.HashedPassword,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -47,7 +48,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, oauth_id, name, email, password_hash, created_at, updated_at FROM users
+SELECT id, oauth_provider, oauth_id, name, email, hashed_password, created_at, updated_at FROM users
 WHERE id = $1
 `
 
@@ -56,10 +57,11 @@ func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.OauthProvider,
 		&i.OauthID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.HashedPassword,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -67,7 +69,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id int32) (User, error) {
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, oauth_id, name, email, password_hash, created_at, updated_at FROM users
+SELECT id, oauth_provider, oauth_id, name, email, hashed_password, created_at, updated_at FROM users ORDER BY created_at DESC
 `
 
 func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
@@ -81,10 +83,11 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 		var i User
 		if err := rows.Scan(
 			&i.ID,
+			&i.OauthProvider,
 			&i.OauthID,
 			&i.Name,
 			&i.Email,
-			&i.PasswordHash,
+			&i.HashedPassword,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -100,16 +103,16 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
-SET name = $2, email = $3, password_hash = $4
+SET name = $2, email = $3, hashed_password = $4
 WHERE id = $1
-RETURNING id, oauth_id, name, email, password_hash, created_at, updated_at
+RETURNING id, oauth_provider, oauth_id, name, email, hashed_password, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	ID           int32   `json:"id"`
-	Name         *string `json:"name"`
-	Email        string  `json:"email"`
-	PasswordHash *string `json:"password_hash"`
+	ID             int32   `json:"id"`
+	Name           *string `json:"name"`
+	Email          string  `json:"email"`
+	HashedPassword *string `json:"hashed_password"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -117,15 +120,16 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.ID,
 		arg.Name,
 		arg.Email,
-		arg.PasswordHash,
+		arg.HashedPassword,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.OauthProvider,
 		&i.OauthID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.HashedPassword,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

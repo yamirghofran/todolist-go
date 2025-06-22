@@ -1,24 +1,30 @@
 -- name: GetTodos :many
-SELECT id, title, description, is_completed, created_at, updated_at
+SELECT * 
 FROM todos
 ORDER BY created_at DESC;
 
 -- name: GetTodoByID :one
-SELECT id, title, description, is_completed, created_at, updated_at
+SELECT *
 FROM todos
 WHERE id = $1;
 
+-- name: GetTodosByUserID :many
+SELECT *
+FROM todos
+WHERE user_id = $1 AND id = $2
+ORDER BY created_at DESC;
+
 -- name: CreateTodo :one
-INSERT INTO todos (title, description)
-VALUES ($1, $2)
-RETURNING id, title, description, is_completed, created_at, updated_at;
+INSERT INTO todos (user_id, title, description)
+VALUES ($1, $2, $3)
+RETURNING *;
 
 -- name: UpdateTodo :one
 UPDATE todos
-SET title = $2, description = $3, is_completed = $4, updated_at = CURRENT_TIMESTAMP
-WHERE id = $1
-RETURNING id, title, description, is_completed, created_at, updated_at;
+SET title = $3, description = $4, is_completed = $5, updated_at = CURRENT_TIMESTAMP
+WHERE user_id = $1 AND id = $2
+RETURNING *;
 
 -- name: DeleteTodo :exec
-DELETE FROM todos WHERE id = $1;
+DELETE FROM todos WHERE user_id = $1 AND id = $2;
 
